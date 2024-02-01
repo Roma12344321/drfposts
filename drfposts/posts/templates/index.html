@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .post {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .post h2 {
+            margin: 0 0 10px 0;
+        }
+        .post p {
+            margin: 5px 0;
+        }
+        .user-details {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Posts</h1>
+    <div id="posts"></div>
+
+    <script>
+        function fetchPosts() {
+            fetch('http://127.0.0.1:8000/api/v1/postlist/')
+                .then(response => response.json())
+                .then(data => {
+                    const postsContainer = document.getElementById('posts');
+                    postsContainer.innerHTML = '';
+                    data.forEach(post => {
+                        const postElement = document.createElement('div');
+                        postElement.className = 'post';
+                        postElement.innerHTML = `
+                            <h2>${post.title}</h2>
+                            <p>${post.content}</p>
+                            <div class="user-details">
+                                <strong>User:</strong> ${post.user_details.username} (${post.user_details.email})
+                            </div>
+                        `;
+                        postsContainer.appendChild(postElement);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        fetchPosts();
+    </script>
+</body>
+</html>
